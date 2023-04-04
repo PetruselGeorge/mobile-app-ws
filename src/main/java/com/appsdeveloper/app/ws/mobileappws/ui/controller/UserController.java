@@ -64,7 +64,7 @@ public class UserController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnedValue = new OperationStatusModel();
-        returnedValue.setOperetionName(RequestOperationName.DELETE.name());
+        returnedValue.setOperationName(RequestOperationName.DELETE.name());
         userService.deleteUser(id);
         returnedValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         return returnedValue;

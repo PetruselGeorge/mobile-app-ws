@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class OperationStatusModel {
     private String operationResult;
-    private String operetionName;
+    private String operationName;
 
 }
