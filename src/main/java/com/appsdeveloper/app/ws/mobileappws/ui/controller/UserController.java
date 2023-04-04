@@ -1,5 +1,6 @@
 package com.appsdeveloper.app.ws.mobileappws.ui.controller;
 
+import com.appsdeveloper.app.ws.mobileappws.exception.UserServiceException;
 import com.appsdeveloper.app.ws.mobileappws.service.UserService;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.UserDto;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
@@ -7,6 +8,7 @@ import com.appsdeveloper.app.ws.mobileappws.ui.model.response.OperationStatusMod
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.enums.RequestOperationName;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.UserRest;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.enums.RequestOperationStatus;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.errors.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
@@ -34,9 +36,12 @@ public class UserController {
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) throws Exception {
         UserRest returnedValue = new UserRest();
         UserDto userDto = new UserDto();
+
+        if (userDetailsRequestModel.getFirstName().isEmpty())throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnedValue);
@@ -69,8 +74,8 @@ public class UserController {
     public List<UserRest> getUsers(@RequestParam(value = "page",defaultValue = "0") int page,@RequestParam(value = "limit",defaultValue = "25") int limit){
         List<UserRest> returnedValue=new ArrayList<>();
 
-        List<UserDto> userDtos=userService.getUsers(page,limit);
-        for(UserDto userDto:userDtos){
+        List<UserDto> userDos=userService.getUsers(page,limit);
+        for(UserDto userDto:userDos){
             UserRest userRest=new UserRest();
             BeanUtils.copyProperties(userDto,userRest);
             returnedValue.add(userRest);
