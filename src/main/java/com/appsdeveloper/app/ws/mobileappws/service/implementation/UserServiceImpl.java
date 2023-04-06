@@ -1,11 +1,15 @@
 package com.appsdeveloper.app.ws.mobileappws.service.implementation;
 
+import com.appsdeveloper.app.ws.mobileappws.io.entity.AddressEntity;
+import com.appsdeveloper.app.ws.mobileappws.io.repositories.AddressRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.UserRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.entity.UserEntity;
 import com.appsdeveloper.app.ws.mobileappws.service.UserService;
 import com.appsdeveloper.app.ws.mobileappws.shared.Utils;
+import com.appsdeveloper.app.ws.mobileappws.shared.dto.AddressDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +27,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     public final UserRepository userRepository;
+    public final AddressRepository addressRepository;
+
     public final Utils utils;
     public final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -30,16 +36,21 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         if (userRepository.findUserEntityByEmail(userDto.getEmail()) != null)
             throw new RuntimeException("User already exists!");
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
-
-        userEntity.setUserId(utils.getUUID());
+        AddressDto addressDto = userDto.getAddressDto();
+        addressDto.setUserDto(userDto);
+        addressDto.setAddressId(utils.getUUID());
+        userDto.setAddressDto(addressDto);
+        ModelMapper modelMapper = new ModelMapper();
+        AddressEntity addressEntity = modelMapper.map(addressDto, AddressEntity.class);
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+        String publicUserID = utils.getUUID();
+        userEntity.setUserId(publicUserID);
+        addressDto.getUserDto().setUserId(userEntity.getUserId());
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-
         UserEntity storedUser = userRepository.save(userEntity);
-        UserDto returnedValue = new UserDto();
-        BeanUtils.copyProperties(storedUser, returnedValue);
-        return returnedValue;
+        addressEntity.setUserEntity(userEntity);
+        addressRepository.save(addressEntity);
+        return modelMapper.map(storedUser, UserDto.class);
     }
 
     @Override
@@ -89,14 +100,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUsers(int page, int limit) {
         List<UserDto> returnedValue = new ArrayList<>();
-        Pageable pageableRequest= PageRequest.of(page,limit);
-        Page<UserEntity> userEntityPage=userRepository.findAll(pageableRequest);
-        List<UserEntity>users=userEntityPage.getContent();
-        for (UserEntity userEntity:users){
-            UserDto userDto=new UserDto();
-            BeanUtils.copyProperties(userEntity,userDto);
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<UserEntity> userEntityPage = userRepository.findAll(pageableRequest);
+        List<UserEntity> users = userEntityPage.getContent();
+        for (UserEntity userEntity : users) {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userEntity, userDto);
             returnedValue.add(userDto);
         }
         return returnedValue;
     }
+
 }

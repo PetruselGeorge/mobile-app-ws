@@ -17,7 +17,7 @@ public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false,unique = true)
+    @Column(name = "id", nullable = false, unique = true)
     private long id;
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -32,5 +32,7 @@ public class UserEntity implements Serializable {
     @Column(name = "email_verification_token")
     private String emailVerificationToken;
     @Column(name = "email_verification_status")
-    private Boolean emailVerificationStatus=false;
+    private Boolean emailVerificationStatus = false;
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private AddressEntity addressEntity;
 }
