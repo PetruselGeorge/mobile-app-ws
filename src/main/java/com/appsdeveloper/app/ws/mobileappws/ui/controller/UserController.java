@@ -4,6 +4,7 @@ import com.appsdeveloper.app.ws.mobileappws.exception.UserServiceException;
 import com.appsdeveloper.app.ws.mobileappws.service.UserService;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.AddressDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.UserDto;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.request.PasswordResetRequestModel;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.OperationStatusModel;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.enums.RequestOperationName;
@@ -74,7 +75,6 @@ public class UserController {
     @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnedValue = new ArrayList<>();
-
         List<UserDto> userDos = userService.getUsers(page, limit);
         for (UserDto userDto : userDos) {
             UserRest userRest = new UserRest();
@@ -84,5 +84,33 @@ public class UserController {
         return returnedValue;
 
 
+    }
+
+    @GetMapping(path = "/email-verification",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel returnedValue = new OperationStatusModel();
+        returnedValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+        boolean isVerified = userService.verifyEmailToken(token);
+        if (isVerified) {
+            returnedValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            returnedValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+        return returnedValue;
+    }
+
+    @PostMapping(path = "/password-reset-request",
+            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel){
+        OperationStatusModel returnedValue=new OperationStatusModel();
+        boolean operationResult=userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+        returnedValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+        returnedValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        if (operationResult){
+            returnedValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        }
+        return returnedValue;
     }
 }
