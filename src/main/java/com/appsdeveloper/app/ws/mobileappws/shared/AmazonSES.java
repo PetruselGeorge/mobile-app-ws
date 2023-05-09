@@ -38,8 +38,11 @@ public class AmazonSES {
 
     public void verifyEmail(UserDto userDto) {
         AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_CENTRAL_1).build();
+
         String htmlBodyWithToken = HTML_BODY.replace("$tokenValue", userDto.getEmailVerificationToken());
+
         String textBodyWithToken = TEXT_BODY.replace("$tokenValue", userDto.getEmailVerificationToken());
+
         SendEmailRequest request = new SendEmailRequest()
                 .withDestination(new Destination().withToAddresses(userDto.getEmail()))
                 .withMessage(new Message().withBody(new Body().withHtml(new Content().withCharset("UTF-8").withData(htmlBodyWithToken))
@@ -53,10 +56,15 @@ public class AmazonSES {
     public boolean sendPasswordResetRequest(String firstName, String email, String token) {
         boolean returnedValue = false;
         AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_CENTRAL_1).build();
+
         String htmlBodyWithToken = PASSWORD_REQUEST_HTMl_BODY.replace("$tokenValue", token);
+
         htmlBodyWithToken = htmlBodyWithToken.replace("$firstName", firstName);
+
         String textBodyWithToken = PASSWORD_REQUEST_TEXT_BODY.replace("$tokenValue", token);
+
         textBodyWithToken = textBodyWithToken.replace("$firstName", firstName);
+
         SendEmailRequest request = new SendEmailRequest()
                 .withDestination(new Destination().withToAddresses(email))
                 .withMessage(new Message().withBody(new Body()
@@ -64,7 +72,9 @@ public class AmazonSES {
                                 .withText(new Content().withCharset("UTF-8").withData(textBodyWithToken)))
                         .withSubject(new Content().withCharset("UTF-8").withData(PASSWORD_RESET_SUBJECT)))
                 .withSource(FROM);
+
         SendEmailResult result = client.sendEmail(request);
+
         if (result != null && (result.getMessageId() != null && !result.getMessageId().isEmpty())) {
             returnedValue = true;
         }
