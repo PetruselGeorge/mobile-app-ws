@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table(name = "trail_images")
-public class ImageEntity implements Serializable {
+public class ImagesEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -2973835400417954875L;
 
@@ -30,4 +30,3 @@ public class ImageEntity implements Serializable {
     @JoinColumn(name = "trail_id", nullable = false)
     private TrailEntity trail;
 }
-
