@@ -35,7 +35,7 @@ public class UserController {
         return returnedValue;
     }
 
-    @PostMapping(
+    @PostMapping( path = "/register",
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )

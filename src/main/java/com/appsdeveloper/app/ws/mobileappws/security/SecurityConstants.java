@@ -9,7 +9,7 @@ public class SecurityConstants {
     public static final String tokenPrefix = "Bearer ";
     public static final String authorizationHeaderString = "Authorization";
     public static final String userIDheaderString = "UserID";
-    public static final String signUpURL = "/users";
+    public static final String signUpURL = "/users/register";
     public static final String processURL = "/users/login";
     public static final String VERIFICATION_EMAIL_URL = "/users/email-verification";
     public static final String RESET_PASSWORD_URL="/users/password-reset-request";
