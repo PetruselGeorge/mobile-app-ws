@@ -1,14 +1,12 @@
-package com.appsdeveloper.app.ws.mobileappws.shared.dto;
+package com.appsdeveloper.app.ws.mobileappws.ui.model.response;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class CoordinateDto {
+@Setter
+public class CoordinateRest {
     private long id;
     private double latitude;
     private double longitude;
-    private TrailDto trailDto;
-
 }

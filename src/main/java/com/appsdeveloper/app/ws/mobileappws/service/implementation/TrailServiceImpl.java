@@ -38,6 +38,16 @@ public class TrailServiceImpl implements TrailService {
         for (TrailEntity trailEntity : trails) {
             TrailDto trailDto = new TrailDto();
             BeanUtils.copyProperties(trailEntity, trailDto);
+
+            List<CoordinateDto> coordinateDtos = new ArrayList<>();
+            List<CoordinateEntity> coordinateEntities = coordinateRepository.findAllByTrail(trailEntity);
+            for (CoordinateEntity coordinateEntity : coordinateEntities) {
+                CoordinateDto coordinateDto = new CoordinateDto();
+                BeanUtils.copyProperties(coordinateEntity, coordinateDto);
+                coordinateDtos.add(coordinateDto);
+            }
+            trailDto.setCoordinates(coordinateDtos);
+
             returnedValue.add(trailDto);
         }
         return returnedValue;
