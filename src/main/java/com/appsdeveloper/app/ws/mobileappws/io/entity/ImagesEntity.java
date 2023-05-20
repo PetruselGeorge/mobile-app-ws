@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table(name = "trail_images")
+@Entity(name = "ImagesEntity")
 public class ImagesEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -2973835400417954875L;
@@ -18,9 +19,6 @@ public class ImagesEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-
-    @Column(name = "image_id", length = 30, nullable = false)
-    private String imageId;
 
     @Lob
     @Column(name = "image", nullable = false)
