@@ -39,5 +39,4 @@ public class TrailEntity implements Serializable {
     @OneToMany(mappedBy = "trail", cascade = CascadeType.ALL)
     private List<CoordinateEntity> images;
 
-
 }
