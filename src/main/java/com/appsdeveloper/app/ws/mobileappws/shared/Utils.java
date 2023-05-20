@@ -1,7 +1,6 @@
 package com.appsdeveloper.app.ws.mobileappws.shared;
 
 import com.appsdeveloper.app.ws.mobileappws.context.SpringApplicationContext;
-import com.appsdeveloper.app.ws.mobileappws.security.AppProperties;
 import com.appsdeveloper.app.ws.mobileappws.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

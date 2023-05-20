@@ -3,8 +3,6 @@ package com.appsdeveloper.app.ws.mobileappws.shared.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serial;
-import java.io.Serializable;
 
 @Getter
 @Setter
