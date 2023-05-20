@@ -11,9 +11,9 @@ public interface TrailService {
 
     List<TrailDto> getTrails(int page, int limit);
 
-    List<CommentDto> getAllCommentsForATrail(long id);
+    List<CommentDto> getAllCommentsForATrail(long id, int page, int limit);
 
     List<ImagesDto> getAllImagesForATrail(long id);
 
-    List<CoordinateDto>getAllCoordinatesForATrail(long id);
+    List<CoordinateDto> getAllCoordinatesForATrail(long id);
 }

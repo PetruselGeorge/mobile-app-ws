@@ -10,4 +10,5 @@ import java.util.List;
 
 @Repository
 public interface TrailRepository extends PagingAndSortingRepository<TrailEntity, Long> {
+    TrailEntity findTrailEntityById(long id);
 }
