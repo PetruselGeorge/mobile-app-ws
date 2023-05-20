@@ -27,7 +27,7 @@ public class UserController {
 
     public final UserService userService;
 
-    @GetMapping(path = "/{id}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE})
     public UserRest getUser(@PathVariable String id) {
         UserRest returnedValue = new UserRest();
         UserDto userDto = userService.getUserByUserId(id);
@@ -36,8 +36,8 @@ public class UserController {
     }
 
     @PostMapping( path = "/register",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
         if (userDetailsRequestModel.getFirstName().isEmpty())
@@ -51,8 +51,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}",
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel requestModel) {
         UserRest returnedValue = new UserRest();
         UserDto userDto = new UserDto();
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public OperationStatusModel deleteUser(@PathVariable String id) {
         OperationStatusModel returnedValue = new OperationStatusModel();
         returnedValue.setOperationName(RequestOperationName.DELETE.name());
@@ -72,7 +72,7 @@ public class UserController {
         return returnedValue;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<UserRest> returnedValue = new ArrayList<>();
         List<UserDto> userDos = userService.getUsers(page, limit);
