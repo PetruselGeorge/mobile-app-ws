@@ -14,6 +14,8 @@ public class TrailRest {
     private String name;
     private String difficulty;
     private byte[] mainImage;
+    private double length;
+    private String time;
     private List<CommentRest> comments;
     private List<CoordinateRest> coordinates;
     private List<ImageRest> images;

@@ -1,9 +1,6 @@
 package com.appsdeveloper.app.ws.mobileappws.service.implementation;
 
-import com.appsdeveloper.app.ws.mobileappws.io.entity.CommentEntity;
-import com.appsdeveloper.app.ws.mobileappws.io.entity.CoordinateEntity;
-import com.appsdeveloper.app.ws.mobileappws.io.entity.ImagesEntity;
-import com.appsdeveloper.app.ws.mobileappws.io.entity.TrailEntity;
+import com.appsdeveloper.app.ws.mobileappws.io.entity.*;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.CommentRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.CoordinateRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.ImagesRepository;
@@ -47,6 +44,30 @@ public class TrailServiceImpl implements TrailService {
                 coordinateDtos.add(coordinateDto);
             }
             trailDto.setCoordinates(coordinateDtos);
+            trailDto.setLength(calculateTrailLength(coordinateDtos));
+            TrailEntity saved=new TrailEntity();
+            BeanUtils.copyProperties(trailDto,saved);
+            trailRepository.save(saved);
+
+
+            List<CommentDto> commentDtos = new ArrayList<>();
+            List<CommentEntity> commentEntities = commentRepository.findAllByTrail(trailEntity);
+            for (CommentEntity commentEntity : commentEntities) {
+                CommentDto commentDto = new CommentDto();
+                BeanUtils.copyProperties(commentEntity, commentDto);
+                commentDtos.add(commentDto);
+            }
+            trailDto.setComments(commentDtos);
+
+            List<ImagesDto> imagesDtos = new ArrayList<>();
+            List<ImagesEntity> imagesEntities = imagesRepository.findAllByTrail(trailEntity);
+            for (ImagesEntity imagesEntity : imagesEntities) {
+                ImagesDto imagesDto = new ImagesDto();
+                BeanUtils.copyProperties(imagesEntity, imagesDto);
+                imagesDtos.add(imagesDto);
+            }
+            trailDto.setImages(imagesDtos);
+
 
             returnedValue.add(trailDto);
         }
@@ -54,12 +75,10 @@ public class TrailServiceImpl implements TrailService {
     }
 
     @Override
-    public List<CommentDto> getAllCommentsForATrail(long id, int page, int limit) {
+    public List<CommentDto> getAllCommentsForATrail(long id) {
         List<CommentDto> returnedValue = new ArrayList<>();
-        Pageable pageableRequest = PageRequest.of(page, limit);
         TrailEntity trailEntity = trailRepository.findTrailEntityById(id);
-        Page<CommentEntity> commentEntityPage = commentRepository.findAllByTrail(trailEntity, pageableRequest);
-        List<CommentEntity> commentEntities = commentEntityPage.getContent();
+        List<CommentEntity> commentEntities = commentRepository.findAllByTrail(trailEntity);
         for (CommentEntity commentEntity : commentEntities) {
             CommentDto commentDto = new CommentDto();
             BeanUtils.copyProperties(commentEntity, commentDto);
@@ -91,5 +110,43 @@ public class TrailServiceImpl implements TrailService {
             BeanUtils.copyProperties(coordinateEntity, coordinateDto);
             returnedValue.add(coordinateDto);
         }
-        return returnedValue;    }
+        return returnedValue;
+    }
+
+
+    public double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6371;
+
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return earthRadius * c;
+    }
+
+    @Override
+    public double calculateTrailLength(List<CoordinateDto> coordinates) {
+        double trailLength = 0;
+
+        for (int i = 0; i < coordinates.size() - 1; i++) {
+            CoordinateDto currentCoordinate = coordinates.get(i);
+            CoordinateDto nextCoordinate = coordinates.get(i + 1);
+
+            double distance = calculateDistance(
+                    currentCoordinate.getLatitude(),
+                    currentCoordinate.getLongitude(),
+                    nextCoordinate.getLatitude(),
+                    nextCoordinate.getLongitude()
+            );
+
+            trailLength += distance;
+        }
+
+        return trailLength;
+    }
 }

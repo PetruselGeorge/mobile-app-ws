@@ -1,9 +1,13 @@
 package com.appsdeveloper.app.ws.mobileappws.ui.controller;
 
 import com.appsdeveloper.app.ws.mobileappws.service.TrailService;
+import com.appsdeveloper.app.ws.mobileappws.shared.dto.CommentDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.CoordinateDto;
+import com.appsdeveloper.app.ws.mobileappws.shared.dto.ImagesDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.TrailDto;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.CommentRest;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.CoordinateRest;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.ImageRest;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.TrailRest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -39,11 +43,31 @@ public class TrailController {
             }
             trailRest.setCoordinates(coordinateRestList);
 
+            List<CommentDto> commentDtos = trailDto.getComments();
+            List<CommentRest> commentRests = new ArrayList<>();
+            if (commentDtos != null) {
+                for (CommentDto commentDto : commentDtos) {
+                    CommentRest commentRest = new CommentRest();
+                    BeanUtils.copyProperties(commentDto, commentRest);
+                    commentRests.add(commentRest);
+                }
+            }
+            trailRest.setComments(commentRests);
+
+            List<ImagesDto> imagesDtos = trailDto.getImages();
+            List<ImageRest> imageRests = new ArrayList<>();
+            if (imagesDtos != null) {
+                for (ImagesDto imagesDto : imagesDtos) {
+                    ImageRest imageRest = new ImageRest();
+                    BeanUtils.copyProperties(imagesDto, imageRest);
+                    imageRests.add(imageRest);
+                }
+            }
+            trailRest.setImages(imageRests);
+
             returnedValue.add(trailRest);
         }
         return returnedValue;
     }
-
-
 
 }

@@ -26,8 +26,16 @@ public class TrailEntity implements Serializable {
     @Column(name = "difficulty", nullable = false)
     private String difficulty;
 
+
+    @Column(name = "length", nullable = false)
+    private double length;
+
+    @Column(name = "time", nullable = false)
+    private String time;
+
+
     @Lob
-    @Column(name = "mainImage", nullable = false)
+    @Column(name = "main_image", nullable = false)
     private byte[] mainImage;
 
     @OneToMany(mappedBy = "trail", cascade = CascadeType.ALL)

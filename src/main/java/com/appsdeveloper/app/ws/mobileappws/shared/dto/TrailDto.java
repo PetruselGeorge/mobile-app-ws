@@ -17,6 +17,8 @@ public class TrailDto implements Serializable {
     private long id;
     private String name;
     private String difficulty;
+    private double length;
+    private String time;
     private byte[] mainImage;
     private List<CommentDto> comments;
     private List<CoordinateDto> coordinates;
