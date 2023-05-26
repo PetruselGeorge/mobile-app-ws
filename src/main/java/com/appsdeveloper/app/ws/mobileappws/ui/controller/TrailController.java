@@ -23,7 +23,7 @@ import java.util.List;
 public class TrailController {
     public final TrailService trailService;
 
-    @GetMapping(path = "getTrails", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(path = "getTrails", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<TrailRest> getTrails(@RequestParam(value = "page", defaultValue = "0") int page,
                                      @RequestParam(value = "limit", defaultValue = "25") int limit) {
         List<TrailRest> returnedValue = new ArrayList<>();
@@ -70,4 +70,36 @@ public class TrailController {
         return returnedValue;
     }
 
+    @PostMapping(path = "addComment", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {
+            MediaType.APPLICATION_JSON_VALUE})
+    public CommentRest addComment(@RequestParam(value = "trailId") long trailId,
+                                  @RequestBody CommentRest commentRest) {
+        CommentDto commentDto = new CommentDto();
+        BeanUtils.copyProperties(commentRest, commentDto);
+
+
+        CommentDto createdComment = trailService.addCommentForATrail(trailId, commentDto);
+
+        CommentRest createdCommentRest = new CommentRest();
+        BeanUtils.copyProperties(createdComment, createdCommentRest);
+
+        return createdCommentRest;
+    }
+
+
+    @GetMapping(path = "comments", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<CommentRest> getComments(@RequestParam(value = "trailId") long trailId) {
+        List<CommentRest> commentRests = new ArrayList<>();
+
+        List<CommentDto> commentDtos = trailService.getAllCommentsForATrail(trailId);
+        if (commentDtos != null) {
+            for (CommentDto commentDto : commentDtos) {
+                CommentRest commentRest = new CommentRest();
+                BeanUtils.copyProperties(commentDto, commentRest);
+                commentRests.add(commentRest);
+            }
+        }
+
+        return commentRests;
+    }
 }

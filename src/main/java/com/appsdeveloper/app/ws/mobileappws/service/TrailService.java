@@ -18,4 +18,6 @@ public interface TrailService {
     List<ImagesDto> getAllImagesForATrail(long id);
 
     List<CoordinateDto> getAllCoordinatesForATrail(long id);
+
+    CommentDto addCommentForATrail(long trailId,CommentDto commentDto);
 }

@@ -149,4 +149,24 @@ public class TrailServiceImpl implements TrailService {
 
         return trailLength;
     }
+
+    @Override
+    public CommentDto addCommentForATrail(long trailId, CommentDto commentDto) {
+        TrailEntity trailEntity = trailRepository.findTrailEntityById(trailId);
+
+        if (trailEntity == null) {
+            throw new RuntimeException("Trail not found");
+        }
+
+        CommentEntity commentEntity = new CommentEntity();
+        BeanUtils.copyProperties(commentDto, commentEntity);
+        commentEntity.setTrail(trailEntity);
+
+        CommentEntity createdComment = commentRepository.save(commentEntity);
+
+        CommentDto createdCommentDto = new CommentDto();
+        BeanUtils.copyProperties(createdComment, createdCommentDto);
+
+        return createdCommentDto;
+    }
 }

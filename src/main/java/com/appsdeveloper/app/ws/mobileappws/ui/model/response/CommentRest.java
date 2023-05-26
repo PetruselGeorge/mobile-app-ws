@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CommentRest {
+    private long id;
     private String comment;
-
 }

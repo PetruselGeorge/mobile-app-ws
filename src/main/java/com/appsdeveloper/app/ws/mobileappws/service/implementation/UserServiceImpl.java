@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
 
         addressEntity.setUserEntity(userEntity);
         UserDto returnedValue = modelMapper.map(userEntity, UserDto.class);
-
-        new AmazonSES().verifyEmail(returnedValue);
+        userEntity.setEmailVerificationStatus(true);
+        userEntity.setEmailVerificationToken(null);
         userRepository.save(userEntity);
         addressRepository.save(addressEntity);
 
