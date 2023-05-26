@@ -1,7 +1,6 @@
 package com.appsdeveloper.app.ws.mobileappws.ui.model.response;
 
-import com.appsdeveloper.app.ws.mobileappws.shared.dto.CommentDto;
-import com.appsdeveloper.app.ws.mobileappws.shared.dto.ImagesDto;
+
 import lombok.Getter;
 import lombok.Setter;
 

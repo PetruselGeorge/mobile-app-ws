@@ -10,4 +10,6 @@ import java.util.List;
 public interface FavouriteTrailsRepository  extends CrudRepository<FavouriteTrailsEntity,Long> {
     List<FavouriteTrailsEntity> findByUserId(long user_id);
 
+    FavouriteTrailsEntity findByUserIdAndTrailId(long userId, long trailId);
+
 }

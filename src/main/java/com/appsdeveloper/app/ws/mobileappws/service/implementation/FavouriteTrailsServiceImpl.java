@@ -9,6 +9,7 @@ import com.appsdeveloper.app.ws.mobileappws.io.repositories.TrailRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.UserRepository;
 import com.appsdeveloper.app.ws.mobileappws.service.FavouriteTrailsService;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.CommentDto;
+import com.appsdeveloper.app.ws.mobileappws.shared.dto.FavouriteTrailsDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.TrailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -41,4 +42,25 @@ public class FavouriteTrailsServiceImpl implements FavouriteTrailsService {
 
         return trailDtos;
     }
+
+    @Override
+    public FavouriteTrailsDto addFavouriteTrail(long trailId, long userId) {
+        FavouriteTrailsEntity existingEntity = favouriteTrailsRepository.findByUserIdAndTrailId(userId, trailId);
+        if (existingEntity != null) {
+           throw new RuntimeException("User already has that favorite Trail");
+        }
+
+        FavouriteTrailsEntity favouriteTrailsEntity = new FavouriteTrailsEntity();
+        favouriteTrailsEntity.setTrailId(trailId);
+        favouriteTrailsEntity.setUserId(userId);
+
+        FavouriteTrailsEntity savedEntity = favouriteTrailsRepository.save(favouriteTrailsEntity);
+
+        FavouriteTrailsDto favouriteTrailsDto = new FavouriteTrailsDto();
+        BeanUtils.copyProperties(savedEntity, favouriteTrailsDto);
+
+        return favouriteTrailsDto;
+    }
+
+
 }

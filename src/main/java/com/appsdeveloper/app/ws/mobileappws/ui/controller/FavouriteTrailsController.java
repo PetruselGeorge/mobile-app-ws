@@ -1,18 +1,19 @@
 package com.appsdeveloper.app.ws.mobileappws.ui.controller;
 
 import com.appsdeveloper.app.ws.mobileappws.service.FavouriteTrailsService;
-import com.appsdeveloper.app.ws.mobileappws.shared.dto.CommentDto;
+import com.appsdeveloper.app.ws.mobileappws.shared.dto.FavouriteTrailsDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.TrailDto;
-import com.appsdeveloper.app.ws.mobileappws.ui.model.response.CommentRest;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.FavouriteTrailsRest;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.OperationStatusModel;
 import com.appsdeveloper.app.ws.mobileappws.ui.model.response.TrailRest;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.enums.RequestOperationName;
+import com.appsdeveloper.app.ws.mobileappws.ui.model.response.enums.RequestOperationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,4 +40,18 @@ public class FavouriteTrailsController {
         return trailRests;
     }
 
+
+    @PostMapping(path = "addFavouriteTrail")
+    public OperationStatusModel addTrailToFavourite(@RequestParam(value = "userId") long userId, @RequestParam(value = "trailId") long trailId) {
+
+        OperationStatusModel returnedValue = new OperationStatusModel();
+        returnedValue.setOperationName(RequestOperationName.ADD_FAVOURITE_TRAIL.name());
+        FavouriteTrailsDto favouriteTrailsDto = favouriteTrailsService.addFavouriteTrail(trailId, userId);
+        returnedValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        FavouriteTrailsRest favouriteTrailsRest = new FavouriteTrailsRest();
+        BeanUtils.copyProperties(favouriteTrailsDto, favouriteTrailsRest);
+
+        return returnedValue;
+    }
 }

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class CoordinateRest {
     private double latitude;
     private double longitude;
