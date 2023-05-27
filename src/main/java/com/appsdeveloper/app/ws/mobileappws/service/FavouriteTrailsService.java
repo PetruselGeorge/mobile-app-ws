@@ -8,5 +8,7 @@ import java.util.List;
 public interface FavouriteTrailsService {
     List<TrailDto> getTrailsByUser(long user_id);
 
-    FavouriteTrailsDto addFavouriteTrail(long trailId, long userId);
+    void addFavouriteTrail (long trailId, long userId);
+
+    void removeFavouriteTrail (long trailId, long userId);
 }

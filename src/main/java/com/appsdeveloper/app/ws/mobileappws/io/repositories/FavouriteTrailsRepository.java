@@ -12,4 +12,6 @@ public interface FavouriteTrailsRepository  extends CrudRepository<FavouriteTrai
 
     FavouriteTrailsEntity findByUserIdAndTrailId(long userId, long trailId);
 
+    FavouriteTrailsEntity findFavouriteTrailsEntityByTrailIdAndUserId(long trailId,long userId);
+
 }

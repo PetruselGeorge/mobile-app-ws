@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity(name = "FavouriteTrailsEntity")
 @Table(name = "favourite_trails")

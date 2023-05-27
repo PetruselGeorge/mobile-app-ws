@@ -1,14 +1,10 @@
 package com.appsdeveloper.app.ws.mobileappws.service.implementation;
 
-import com.appsdeveloper.app.ws.mobileappws.io.entity.CommentEntity;
 import com.appsdeveloper.app.ws.mobileappws.io.entity.FavouriteTrailsEntity;
 import com.appsdeveloper.app.ws.mobileappws.io.entity.TrailEntity;
-import com.appsdeveloper.app.ws.mobileappws.io.entity.UserEntity;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.FavouriteTrailsRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.TrailRepository;
-import com.appsdeveloper.app.ws.mobileappws.io.repositories.UserRepository;
 import com.appsdeveloper.app.ws.mobileappws.service.FavouriteTrailsService;
-import com.appsdeveloper.app.ws.mobileappws.shared.dto.CommentDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.FavouriteTrailsDto;
 import com.appsdeveloper.app.ws.mobileappws.shared.dto.TrailDto;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,23 +39,23 @@ public class FavouriteTrailsServiceImpl implements FavouriteTrailsService {
     }
 
     @Override
-    public FavouriteTrailsDto addFavouriteTrail(long trailId, long userId) {
+    public void addFavouriteTrail(long trailId, long userId) {
         FavouriteTrailsEntity existingEntity = favouriteTrailsRepository.findByUserIdAndTrailId(userId, trailId);
         if (existingEntity != null) {
-           throw new RuntimeException("User already has that favorite Trail");
+            throw new RuntimeException("User already has that favorite Trail");
         }
 
         FavouriteTrailsEntity favouriteTrailsEntity = new FavouriteTrailsEntity();
         favouriteTrailsEntity.setTrailId(trailId);
         favouriteTrailsEntity.setUserId(userId);
+        favouriteTrailsRepository.save(favouriteTrailsEntity);
 
-        FavouriteTrailsEntity savedEntity = favouriteTrailsRepository.save(favouriteTrailsEntity);
-
-        FavouriteTrailsDto favouriteTrailsDto = new FavouriteTrailsDto();
-        BeanUtils.copyProperties(savedEntity, favouriteTrailsDto);
-
-        return favouriteTrailsDto;
     }
 
+    @Override
+    public void removeFavouriteTrail(long trailId, long userId) {
+        FavouriteTrailsEntity favouriteTrailsEntity = favouriteTrailsRepository.findFavouriteTrailsEntityByTrailIdAndUserId(trailId,userId);
+        favouriteTrailsRepository.delete(favouriteTrailsEntity);
 
+    }
 }
