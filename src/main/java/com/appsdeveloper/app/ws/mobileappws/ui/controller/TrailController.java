@@ -24,10 +24,9 @@ public class TrailController {
     public final TrailService trailService;
 
     @GetMapping(path = "getTrails", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public List<TrailRest> getTrails(@RequestParam(value = "page", defaultValue = "0") int page,
-                                     @RequestParam(value = "limit", defaultValue = "25") int limit) {
+    public List<TrailRest> getTrails() {
         List<TrailRest> returnedValue = new ArrayList<>();
-        List<TrailDto> trailDtos = trailService.getTrails(page, limit);
+        List<TrailDto> trailDtos = trailService.getTrails();
         for (TrailDto trailDto : trailDtos) {
             TrailRest trailRest = new TrailRest();
             BeanUtils.copyProperties(trailDto, trailRest);

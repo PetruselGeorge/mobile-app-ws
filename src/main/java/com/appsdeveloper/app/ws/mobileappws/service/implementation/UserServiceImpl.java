@@ -1,8 +1,10 @@
 package com.appsdeveloper.app.ws.mobileappws.service.implementation;
 
 import com.appsdeveloper.app.ws.mobileappws.io.entity.AddressEntity;
+import com.appsdeveloper.app.ws.mobileappws.io.entity.FavouriteTrailsEntity;
 import com.appsdeveloper.app.ws.mobileappws.io.entity.PasswordResetTokenEntity;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.AddressRepository;
+import com.appsdeveloper.app.ws.mobileappws.io.repositories.FavouriteTrailsRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.PasswordResetTokenRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.repositories.UserRepository;
 import com.appsdeveloper.app.ws.mobileappws.io.entity.UserEntity;
@@ -31,6 +33,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     public final UserRepository userRepository;
     public final AddressRepository addressRepository;
+    public final FavouriteTrailsRepository favouriteTrailsRepository;
 
     public final Utils utils;
     public final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -106,6 +109,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String id) {
         UserEntity userEntity = userRepository.findUserEntityByUserId(id);
+        List<FavouriteTrailsEntity>favouriteTrailsEntities=favouriteTrailsRepository.findByUserId(userEntity.getId());
+        favouriteTrailsRepository.deleteAll(favouriteTrailsEntities);
         if (userEntity == null) throw new UsernameNotFoundException(id);
         userRepository.delete(userEntity);
     }

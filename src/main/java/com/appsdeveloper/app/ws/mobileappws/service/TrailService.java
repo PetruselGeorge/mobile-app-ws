@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TrailService {
 
-    List<TrailDto> getTrails(int page, int limit);
+    List<TrailDto> getTrails();
 
     double calculateTrailLength(List<CoordinateDto> coordinates);
 

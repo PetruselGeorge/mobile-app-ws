@@ -27,11 +27,9 @@ public class TrailServiceImpl implements TrailService {
 
 
     @Override
-    public List<TrailDto> getTrails(int page, int limit) {
+    public List<TrailDto> getTrails() {
         List<TrailDto> returnedValue = new ArrayList<>();
-        Pageable pageableRequest = PageRequest.of(page, limit);
-        Page<TrailEntity> trailEntities = trailRepository.findAll(pageableRequest);
-        List<TrailEntity> trails = trailEntities.getContent();
+        List<TrailEntity> trails = (List<TrailEntity>) trailRepository.findAll();
         for (TrailEntity trailEntity : trails) {
             TrailDto trailDto = new TrailDto();
             BeanUtils.copyProperties(trailEntity, trailDto);
